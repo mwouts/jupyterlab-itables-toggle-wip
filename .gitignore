@@ -1,0 +1,9 @@
+# PyCharm
+.idea
+
+# Build files
+lib/
+node_modules/
+
+# Log files
+*.log
