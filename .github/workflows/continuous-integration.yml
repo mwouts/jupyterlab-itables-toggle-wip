@@ -88,9 +88,9 @@ jobs:
           python-version: 3.7
       - name: Build package
         run: |
-          pip install wheel jupyter-packaging jupyterlab>=3
+          pip install wheel "jupyter_packaging~=0.10,<2" "jupyterlab~=3.1"
           python setup.py sdist bdist_wheel
-          # Don't publish a tar.gz file over 1MB  (Issue #730)
+          # Don't publish a tar.gz file over 1MB  (Issue jupytext/730)
           if (($(wc -c < dist/*.tar.gz) > 1000000)); then exit 1; fi
           # node_modules should not be in the package
           if (($(tar -tf dist/*.tar.gz | grep node_modules | wc -l)>0)); then echo "node_modules should not be included" && exit 1; fi
