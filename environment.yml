@@ -1,0 +1,11 @@
+name: jupyterlab-itables-dev
+channels:
+  - defaults
+dependencies:
+  - jupyterlab>=3.0.0,<4.0.0
+  - setuptools>=40.8.0
+  - wheel
+  - pip
+  - nodejs>=12
+  - pip:
+    - jupyter_packaging>=0.7.9,<0.8.0
