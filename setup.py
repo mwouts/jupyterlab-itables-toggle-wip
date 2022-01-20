@@ -1,27 +1,29 @@
-import re
-from io import open
-from os import path
+import json
+import sys
+from pathlib import Path
 
-from jupyter_packaging import (
-    combine_commands,
-    create_cmdclass,
-    ensure_targets,
-    install_npm,
-)
-from setuptools import setup
+import setuptools
 
-this_directory = path.abspath(path.dirname(__file__))
-with open(path.join(this_directory, "README.md"), encoding="utf-8") as f:
-    long_description = f.read()
+HERE = Path(__file__).parent.resolve()
 
-with open(path.join(this_directory, "jupyterlab-itables/version.py")) as f:
-    version_file = f.read()
-    version_match = re.search(r"^__version__ = ['\"]([^'\"]*)['\"]", version_file, re.M)
-    version = version_match.group(1)
+# The name of the project
+name = "jupyterlab-itables"
+
+lab_path = (HERE / name.replace("-", "_") / "labextension")
+
+# Representative files that should exist after a successful build
+ensured_targets = [
+    str(lab_path / "package.json"),
+]
+
+long_description = (HERE / "README.md").read_text()
+
+# Get the package info from package.json
+pkg_json = json.loads((HERE / "package.json").read_bytes())
 
 setup_args = dict(
     name="jupyterlab-itables",
-    version=version,
+    version="0.1.0",
     author="Marc Wouts",
     author_email="marc.wouts@gmail.com",
     description="A JupyterLab extension for ITables",
@@ -29,6 +31,13 @@ setup_args = dict(
     long_description_content_type="text/markdown",
     url="https://github.com/mwouts/jupyterlab-itables",
     license="MIT",
+    install_requires=[],
+    zip_safe=False,
+    include_package_data=False,
+    python_requires=">=3.6",
+    platforms="Linux, Mac OS X, Windows",
+    keywords=["Jupyter", "JupyterLab", "JupyterLab3"],
+    packages=setuptools.find_packages(),
     classifiers=[
         "Development Status :: 4 - Beta",
         "License :: OSI Approved :: MIT License",
@@ -45,37 +54,22 @@ setup_args = dict(
     ],
 )
 
-# Install labextension using jupyter_packaging
-lab_path = path.join(this_directory, "jupyterlab-itables", "labextension")
+try:
+    from jupyter_packaging import (
+        wrap_installers,
+        npm_builder,
+        get_data_files
+    )
+    post_develop = npm_builder(
+        build_cmd="install:extension", source_dir="src", build_dir=lab_path
+    )
+    setup_args["cmdclass"] = wrap_installers(post_develop=post_develop, ensured_targets=ensured_targets)
+except ImportError as e:
+    import logging
+    logging.basicConfig(format="%(levelname)s: %(message)s")
+    logging.warning("Build tool `jupyter-packaging` is missing. Install it with pip or conda.")
+    if not ("--name" in sys.argv or "--version" in sys.argv):
+        raise e
 
-data_files_spec = [
-    ("share/jupyter/labextensions/jupyterlab-itables", lab_path, "**"),
-    (
-        "share/jupyter/labextensions/jupyterlab-itables",
-        this_directory,
-        "install.json",
-    ),
-]
-
-# Representative files that should exist after a successful build
-jstargets = [
-    path.join(lab_path, "package.json"),
-]
-
-cmdclass = create_cmdclass(
-    "jsdeps",
-    data_files_spec=data_files_spec,
-)
-
-cmdclass["jsdeps"] = combine_commands(
-    install_npm(
-        lab_path,
-        build_cmd="build:prod",
-        npm=["jlpm"],
-    ),
-    ensure_targets(jstargets),
-)
-setup_args["cmdclass"] = cmdclass
-
-# Call setup
-setup(**setup_args)
+if __name__ == "__main__":
+    setuptools.setup(**setup_args)

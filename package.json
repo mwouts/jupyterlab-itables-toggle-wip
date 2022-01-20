@@ -1,0 +1,61 @@
+{
+  "name": "jupyterlab-itables",
+  "version": "0.1.0",
+  "description": "Pandas DataFrames as Interactive DataTables",
+  "keywords": [
+    "jupyter",
+    "itables",
+    "jupyterlab",
+    "jupyterlab-extension"
+  ],
+  "homepage": "https://github.com/mwouts/jupyterlab-itables",
+  "bugs": {
+    "url": "https://github.com/mwouts/jupyterlab-itables/issues"
+  },
+  "license": "MIT",
+  "author": "Marc Wouts",
+  "files": [
+    "lib/**/*.{d.ts,eot,gif,html,jpg,js,js.map,json,png,svg,woff2,ttf}",
+    "style/**/*.{css,eot,gif,html,jpg,json,png,svg,woff2,ttf}"
+  ],
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mwouts/jupyterlab-itables.git"
+  },
+  "scripts": {
+    "build": "jlpm run build:lib && jlpm run build:labextension:dev",
+    "build:all": "jlpm run build:lib && jlpm run build:labextension",
+    "build:labextension": "jupyter labextension build .",
+    "build:labextension:dev": "jupyter labextension build --development True .",
+    "build:lib": "tsc",
+    "build:prod": "jlpm run clean && jlpm run build:lib && jlpm run build:labextension",
+    "clean": "jlpm run clean:lib",
+    "clean:all": "jlpm run clean:lib && jlpm run clean:labextension",
+    "clean:labextension": "rimraf jupyterlab-itables/labextension",
+    "clean:lib": "rimraf lib tsconfig.tsbuildinfo",
+    "install:extension": "jlpm run build",
+    "prepare": "jlpm run clean && jlpm run build:prod",
+    "watch": "run-p watch:src watch:labextension",
+    "watch:labextension": "jupyter labextension watch .",
+    "watch:src": "tsc -w"
+  },
+  "dependencies": {
+    "@jupyterlab/application": "^3.1.0",
+    "@jupyterlab/apputils": "^3.1.0",
+    "@jupyterlab/docregistry": "^3.1.0",
+    "@jupyterlab/notebook": "^3.1.0",
+    "@lumino/disposable": "^1.10.1"
+  },
+  "devDependencies": {
+    "@jupyterlab/builder": "^3.1.0",
+    "npm-run-all": "^4.1.5",
+    "rimraf": "^3.0.2",
+    "typescript": "~4.1.3"
+  },
+  "jupyterlab": {
+    "extension": true,
+    "outputDir": "jupyterlab-itables/labextension"
+  }
+}
