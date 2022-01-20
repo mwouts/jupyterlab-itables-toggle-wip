@@ -1,3 +1,7 @@
+import {
+  JupyterFrontEnd,
+  JupyterFrontEndPlugin,
+} from "@jupyterlab/application";
 import { DocumentRegistry } from "@jupyterlab/docregistry";
 import { INotebookModel, NotebookPanel } from "@jupyterlab/notebook";
 import { DisposableDelegate, IDisposable } from "@lumino/disposable";
@@ -31,3 +35,15 @@ export class ItablesButton
     });
   };
 }
+
+const itablesExtension: JupyterFrontEndPlugin<void> = {
+  id: "jupyterlab-itables",
+  autoStart: true,
+  requires: [],
+  activate: (app: JupyterFrontEnd) => {
+    console.log("jupyterlab_itables is activated!");
+    app.docRegistry.addWidgetExtension("Notebook", new ItablesButton());
+  },
+};
+
+export default itablesExtension;
