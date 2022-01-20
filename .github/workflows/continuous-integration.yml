@@ -76,6 +76,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
+          python -m pip install flake8
       - name: Lint with flake8
         run: |
           # stop the build if there are Python syntax errors or undefined names
@@ -86,10 +87,6 @@ jobs:
           flake8 . --count --exit-zero --max-complexity=10 --statistics
       - name: Install from source
         run: pip install .
-      - name: Test with pytest
-        run: pytest --cov=./ --cov-report=xml
-      - name: Upload coverage
-        uses: codecov/codecov-action@v1
 
   build:
     name: Build
