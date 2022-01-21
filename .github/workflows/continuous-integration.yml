@@ -97,7 +97,7 @@ jobs:
           # node_modules should not be in the package
           if (($(tar -tf dist/*.tar.gz | grep node_modules | wc -l)>0)); then echo "node_modules should not be included" && exit 1; fi
           # Check that the lab extensions is there
-          if (($(tar -tf dist/*.tar.gz | grep labextension/package.json$ | wc -l)==0)); then echo "Missing lab extension" && exit 1; fi
+          if (($(tar -tf dist/*.tar.gz | grep package.json$ | wc -l)==0)); then echo "Missing lab extension" && exit 1; fi
           # Install
           pip install dist/*.tar.gz
           echo "Install went OK"
