@@ -1,0 +1,10 @@
+# Stop everything if one command fails
+set -e
+
+# Install from sources
+pip install .
+
+# Open text notebooks with the notebook editor
+mkdir -p ${HOME}/.jupyter/labconfig
+cp binder/labconfig/* ${HOME}/.jupyter/labconfig
+
