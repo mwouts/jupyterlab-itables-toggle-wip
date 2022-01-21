@@ -9,7 +9,7 @@ HERE = Path(__file__).parent.resolve()
 # The name of the project
 name = "jupyterlab-itables"
 
-lab_path = (HERE / name.replace("-", "_") / "labextension")
+lab_path = HERE / name.replace("-", "_") / "labextension"
 
 # Representative files that should exist after a successful build
 ensured_targets = [
@@ -55,19 +55,21 @@ setup_args = dict(
 )
 
 try:
-    from jupyter_packaging import (
-        wrap_installers,
-        npm_builder,
-        get_data_files
-    )
+    from jupyter_packaging import npm_builder, wrap_installers
+
     post_develop = npm_builder(
         build_cmd="install:extension", source_dir="src", build_dir=lab_path
     )
-    setup_args["cmdclass"] = wrap_installers(post_develop=post_develop, ensured_targets=ensured_targets)
+    setup_args["cmdclass"] = wrap_installers(
+        post_develop=post_develop, ensured_targets=ensured_targets
+    )
 except ImportError as e:
     import logging
+
     logging.basicConfig(format="%(levelname)s: %(message)s")
-    logging.warning("Build tool `jupyter-packaging` is missing. Install it with pip or conda.")
+    logging.warning(
+        "Build tool `jupyter-packaging` is missing. Install it with pip or conda."
+    )
     if not ("--name" in sys.argv or "--version" in sys.argv):
         raise e
 

@@ -2,6 +2,7 @@ name: jupyterlab-itables-dev
 channels:
   - defaults
 dependencies:
+  - pre-commit
   - jupyterlab>=3.1,<4.0
   - setuptools>=40.8.0
   - wheel
