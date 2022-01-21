@@ -26,15 +26,16 @@
   },
   "scripts": {
     "build": "jlpm run build:lib && jlpm run build:labextension:dev",
+    "build:all": "jlpm run build:lib && jlpm run build:labextension",
     "build:labextension": "jupyter labextension build .",
     "build:labextension:dev": "jupyter labextension build --development True .",
     "build:lib": "tsc",
-    "build:prod": "jlpm run build:lib && jlpm run build:labextension",
+    "build:prod": "jlpm run clean && jlpm run build:lib && jlpm run build:labextension",
     "clean": "jlpm run clean:lib",
     "clean:all": "jlpm run clean:lib && jlpm run clean:labextension",
     "clean:labextension": "rimraf jupyterlab-itables/labextension",
     "clean:lib": "rimraf lib tsconfig.tsbuildinfo",
-    "install:extension": "jupyter labextension develop --overwrite .",
+    "install:extension": "jlpm run build",
     "prepare": "jlpm run clean && jlpm run build:prod",
     "watch": "run-p watch:src watch:labextension",
     "watch:labextension": "jupyter labextension watch .",
@@ -54,17 +55,11 @@
     "typescript": "~4.1.3"
   },
   "jupyterlab": {
-    "discovery": {
-      "server": {
-        "managers": [
-          "pip"
-        ],
-        "base": {
-          "name": "jupyterlab-itables"
-        }
-      }
-    },
     "extension": true,
-    "outputDir": "jupyterlab-itables/labextension"
+    "outputDir": "jupyterlab-itables/labextension",
+    "_build": {
+      "load": "static/remoteEntry.ca21aecf04de60b92fe2.js",
+      "extension": "./extension"
+    }
   }
 }
